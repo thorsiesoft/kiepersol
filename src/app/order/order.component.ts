@@ -77,7 +77,7 @@ export class OrderComponent implements OnInit {
 
   selectChangePiecesTypeHandler(event: any) {
     this.selectedPiecesType = event.target.value;
-    console.log(this.selectedPiecesType)
+    console.log(this.selectedPiecesType + ' selected')
   }
 
   submit() {
