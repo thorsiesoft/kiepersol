@@ -61,6 +61,7 @@
             <div class="form-group">
                 <label for="selectPiecesType">Select Product</label>
                 <select (change)="selectChangePiecesTypeHandler($event)" class="form-control" id="selectPiecesType">
+                    <option value="">--Select Product--</option>
                     <option *ngFor="let item of piecesProducts">{{ item }}</option>
                 </select>
             </div>
@@ -69,7 +70,8 @@
         <div class="col">
             <div class="form-group">
                 <label for="selectPiecesSize">Select Size</label>
-                <select class="form-control" id="selectPiecesSize">
+                <select class="form-control" formControlName="selectPiecesSize" id="selectPiecesSize">
+                    <option value="">--Select Size--</option>
                     <option *ngFor="let item of piecesSizes">{{ item }}</option>
                 </select>
             </div>
@@ -77,11 +79,11 @@
 
         <div class="col">
             <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input" id="deboned">
+                <input type="checkbox" class="form-check-input" formControlName="deboned" id="deboned">
                 <label class="form-check-label" for="deboned">Deboned</label>
               </div>
               <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input" id="skinned">
+                <input type="checkbox" class="form-check-input" formControlName="skinned" id="skinned">
                 <label class="form-check-label" for="skinned">Skinned</label>
               </div>
         </div>

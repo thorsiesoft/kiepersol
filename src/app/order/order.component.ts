@@ -18,10 +18,10 @@ export class OrderComponent implements OnInit {
   wholeSizes: Array<String>;
   piecesProducts: Array<String>;
   piecesSizes: Array<string>;
- 
+
   selectedPiecesType: string = '';
 
-  constructor(private data: DataService, private formBuilder: FormBuilder) { 
+  constructor(private data: DataService, private formBuilder: FormBuilder) {
     this.wholeForm = this.formBuilder.group({
       selectChickenSize: [''],
       selectChickenQuantity: [''],
@@ -40,20 +40,20 @@ export class OrderComponent implements OnInit {
     this.piecesProducts = new Array();
     this.piecesSizes = new Array();
 
-    this.data.getWholeOrderItems().subscribe((res : any[]) => {
+    this.data.getWholeOrderItems().subscribe((res: any[]) => {
       this.wholeItems = res
       console.log(this.wholeItems)
-      
+
       res.forEach(element => {
         if (!this.wholeSizes.includes(element.size)) {
           this.wholeSizes.push(element.size);
         }
       });
 
-      console.log(this.wholeSizes)
+      console.log('wholeSizes ' + this.wholeSizes)
     });
 
-    this.data.getPiecesOrderItems().subscribe((res : any[]) => {
+    this.data.getPiecesOrderItems().subscribe((res: any[]) => {
       this.piecesItems = res
       console.log(this.piecesItems)
 
@@ -62,26 +62,52 @@ export class OrderComponent implements OnInit {
           this.piecesProducts.push(element.product);
         }
       });
-      console.log(this.piecesProducts)
-      
-      res.forEach(element => {
-        if (!this.piecesSizes.includes(element.size)) {
-          this.piecesSizes.push(element.size);
-        }
-      });
-      console.log(this.piecesSizes)
-
+      console.log('piecesProducts ' + this.piecesProducts)
     });
-    
+
   }
 
   selectChangePiecesTypeHandler(event: any) {
+    var availableDeboned: boolean
+    var availableSkinned: boolean
+
     this.selectedPiecesType = event.target.value;
     console.log(this.selectedPiecesType + ' selected')
+    this.piecesSizes = new Array();
+
+    this.piecesItems.forEach(element => {
+      if (element.product == this.selectedPiecesType) {
+        this.piecesSizes.push(element.size);
+        if (element.availableDeboned) {
+          availableDeboned = true;
+        }
+        if (element.availableSkinned) {
+          availableSkinned = true;
+        }
+      }
+    });
+    console.log(this.piecesSizes)
+
+    this.piecesForm.controls['selectPiecesSize'].setValue('-- Select Size --')
+
+    this.activateCheckBoxes(availableDeboned, availableSkinned);
+  }
+
+  activateCheckBoxes(availableDeboned: boolean, availableSkinned: boolean) {
+    if (!availableDeboned) {
+      this.piecesForm.controls['deboned'].disable()
+    } else {
+      this.piecesForm.controls['deboned'].enable()
+    }
+    if (!availableSkinned) {
+      this.piecesForm.controls['skinned'].disable()
+    } else {
+      this.piecesForm.controls['skinned'].enable()
+    }
   }
 
   submit() {
     console.log('Submit Called')
-   }
+  }
 
 }
