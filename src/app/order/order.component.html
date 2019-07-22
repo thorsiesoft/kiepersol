@@ -1,0 +1,118 @@
+<h3>Order</h3>
+
+<div class="spacer20"></div>
+
+<form [formGroup]="wholeForm" (ngSubmit)="submit()">
+<div class="container-fluid mx-3 border border-dark rounded">
+    <div class="row, top-buffer">
+        <div class="col">
+            <h6>Whole Chickens</h6>
+        </div> 
+    </div>
+    <div class="row, top-buffer">
+        <div class="col">
+            <div class="form-group">
+                <label for="selectChickenSize">Select Size</label>
+                <select class="form-control" id="selectChickenSize" ng-model="selectedChickenSize">
+                    <option *ngFor="let item of wholeSizes">{{ item }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- <form [formGroup]="chickenSizeForm">
+        <div class="col">
+            <mdb-select [options]="wholeSizes" formControlName="selectChickenSize" placeholder="Select Size"></mdb-select>
+            <label>Select Size</label>
+        </div>
+    </form> -->
+    
+    <div class="row, top-buffer">
+        <div class="col">
+            <div class="form-group">
+                <label for="selectChickenQuantity">Select Quantity</label>
+                <select class="form-control" id="selectChickenQuantity" ng-model="selectedChickenQuantity">
+                    <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row top-buffer bottom-buffer">
+        <div class="col">
+            <button type="submit">Submit</button>
+        </div>
+    </div>
+
+</div>
+</form>
+
+<div class="spacer20"></div>
+
+<form [formGroup]="piecesForm" (ngSubmit)="submit()">
+<div class="container-fluid mx-3 border border-dark rounded">
+    <div class="row, top-buffer">
+        <div class="col">
+            <h6>Pieces</h6>
+        </div>
+    </div>
+    <div class="row, top-buffer">
+        <div class="col">
+            <div class="form-group">
+                <label for="selectPiecesType">Select Product</label>
+                <select (change)="selectChangePiecesTypeHandler($event)" class="form-control" id="selectPiecesType">
+                    <option *ngFor="let item of piecesProducts">{{ item }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="form-group">
+                <label for="selectPiecesSize">Select Size</label>
+                <select class="form-control" id="selectPiecesSize">
+                    <option *ngFor="let item of piecesSizes">{{ item }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="form-check form-check-inline">
+                <input type="checkbox" class="form-check-input" id="deboned">
+                <label class="form-check-label" for="deboned">Deboned</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="checkbox" class="form-check-input" id="skinned">
+                <label class="form-check-label" for="skinned">Skinned</label>
+              </div>
+        </div>
+    </div>
+
+    <div class="row, top-buffer">
+        <div class="col">
+            <div class="form-group">
+                <label for="selectChickenQuantity">Select Quantity</label>
+                <select class="form-control" id="selectChickenQuantity" ng-model="selectedChickenQuantity">
+                    <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row, top-buffer bottom-buffer">
+        <div class="col">
+            <button type="submit">Submit</button>
+        </div>
+    </div>
+</div>
+
+</form>
+
+<div class="spacer20"></div>
+
+<div class="container-fluid mx-3 border border-dark rounded">
+    <div class="row, top-buffer">
+        <div class="col">
+            <h6>Summary</h6>
+        </div>
+    </div>
+</div>

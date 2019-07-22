@@ -1,0 +1,17 @@
+.top-buffer { 
+    margin-top:10px; 
+}
+
+.bottom-buffer { 
+  margin-bottom:10px; 
+}
+
+.spacer20 {
+    height: 20px;
+  }
+
+h3 { 
+	position: relative; 
+	top: 10px;
+	left: 30px;
+}
