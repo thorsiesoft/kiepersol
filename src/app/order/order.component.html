@@ -1,9 +1,24 @@
 <h3>Order</h3>
+<div class="spacer20"></div>
+
+<form [formGroup]="customerForm">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded">
+        <div class="row">
+            <div class="col form-group">
+                <label for="selectCustomer">Select Customer</label>
+                <select class="form-control" id="selectCustomer" formControlName="selectCustomer">
+                    <option value="">--Select Customer--</option>
+                    <option *ngFor="let customer of customers">{{ customer.name }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
 
 <div class="spacer20"></div>
 
 <form [formGroup]="wholeForm" (ngSubmit)="submitWhole()">
-    <div class="container-fluid mx-3 border border-dark rounded">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Whole Chickens</h6>
@@ -24,7 +39,7 @@
                 <div class="form-group">
                     <label for="selectChickenQuantity">Select Quantity</label>
                     <select class="form-control" id="selectChickenQuantity" formControlName="selectChickenQuantity">
-                        <option value="">--Select Quantity--</option>   
+                        <option value="">--Select Quantity--</option>
                         <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
                     </select>
                 </div>
@@ -43,7 +58,7 @@
 <div class="spacer20"></div>
 
 <form [formGroup]="piecesForm" (ngSubmit)="submitPieces()">
-    <div class="container-fluid mx-3 border border-dark rounded">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Pieces</h6>
@@ -103,16 +118,21 @@
 <div class="spacer20"></div>
 
 <form [formGroup]="finalForm" (ngSubmit)="submitFinal()">
-    <div class="container-fluid mx-3 border border-dark rounded">
+    <div class="container-fluid mx-3 bg-dark text-light border border-dark rounded">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Summary</h6>
             </div>
         </div>
+        <div class="row top-buffer">
+            <div class="col">
+                <span>{{ customerForm.controls.selectCustomer.value }}</span>
+            </div>
+        </div>
 
         <div class="row top-buffer" *ngIf="bindedOrdersValues">
             <div class="col">
-                <table class="table">
+                <table class="table text-light">
                     <thead>
                         <tr>
                             <th scope="col">Product</th>

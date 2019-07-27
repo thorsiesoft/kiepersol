@@ -21,6 +21,10 @@ export class DataService {
     return this.http.get('http://localhost:8080/items/?itemClassification=PIECES')
   }
 
+  getCustomers() {
+    return this.http.get('http://localhost:8080/customers/')
+  }
+
   postOrders(orders: Order[]) {
     orders.forEach(ord =>
       this.http.post('http://localhost:8080/order/', ord))

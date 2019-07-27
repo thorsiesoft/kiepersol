@@ -13,9 +13,11 @@ export class OrderComponent implements OnInit {
   wholeForm: FormGroup;
   piecesForm: FormGroup;
   finalForm: FormGroup;
+  customerForm: FormGroup;
 
   wholeItems: Object;
   piecesItems; Object;
+  customers: Object;
 
   wholeSizes: Array<String>;
   piecesProducts: Array<String>;
@@ -45,6 +47,10 @@ export class OrderComponent implements OnInit {
     });
 
     this.finalForm = this.formBuilder.group([]);
+
+    this.customerForm = this.formBuilder.group({
+      selectCustomer: ['']
+    })
   }
 
   ngOnInit() {
@@ -78,6 +84,10 @@ export class OrderComponent implements OnInit {
         }
       });
       console.log('piecesProducts ' + this.piecesProducts)
+    });
+
+    this.data.getCustomers().subscribe((res: any[]) => {
+      this.customers = res
     });
 
   }
