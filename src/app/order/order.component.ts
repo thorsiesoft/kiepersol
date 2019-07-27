@@ -133,7 +133,7 @@ export class OrderComponent implements OnInit {
     }
 
     let key: string
-    key = 'Whole Chicken|' + this.wholeForm.controls['selectChickenSize'].value
+    key = 'Whole Chicken|' + this.wholeForm.controls['selectChickenSize'].value + '|' + null + '|' + null
     if (this.orders.has(key)) {
       let order: Order;
       order = this.orders.get(key)
@@ -143,7 +143,8 @@ export class OrderComponent implements OnInit {
       console.log('updating existing entry in orders')
     } else {
       this.orders.set(key, 
-                      new Order('Whole Chicken',this.wholeForm.controls['selectChickenSize'].value, this.wholeForm.controls['selectChickenQuantity'].value));
+                      new Order('Whole Chicken',this.wholeForm.controls['selectChickenSize'].value, 
+                      this.wholeForm.controls['selectChickenQuantity'].value, null, null));
       console.log('adding new entry in orders')
     }
 
@@ -161,7 +162,7 @@ export class OrderComponent implements OnInit {
 
     let key: string
     key = this.piecesForm.controls['selectPiecesType'].value + '|' + this.piecesForm.controls['selectPiecesSize'].value
-          + this.piecesForm.controls['deboned'].value + '|' + this.piecesForm.controls['skinned'].value;
+          + '|' + this.piecesForm.controls['deboned'].value + '|' + this.piecesForm.controls['skinned'].value;
 
     if (this.orders.has(key)) {
       let order: Order;
@@ -183,12 +184,17 @@ export class OrderComponent implements OnInit {
     this.bindedOrdersValues = Array.from(this.orders.values());
   }
 
-  submitFinal() {
-    console.log('final submit called')
+  handleRemove(order: Order) {
+    console.log('remove order called')
+    let key: string
+    key = order.product + "|" + order.size + "|" + order.deboned + "|" + order.skinned
+    this.orders.delete(key)
+    this.bindedOrdersValues = Array.from(this.orders.values());
   }
 
-  handleRemove(event: any) {
-    console.log('remove order called')
+  submitFinal() {
+    console.log('final submit called')
+    //this.data.postOrders(Array.from(this.orders.values()))
   }
 
 }
