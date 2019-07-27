@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Order } from './order';
 
 @Component({
   selector: 'app-order',
@@ -11,6 +12,7 @@ export class OrderComponent implements OnInit {
 
   wholeForm: FormGroup;
   piecesForm: FormGroup;
+  finalForm: FormGroup;
 
   wholeItems: Object;
   piecesItems; Object;
@@ -20,6 +22,13 @@ export class OrderComponent implements OnInit {
   piecesSizes: Array<string>;
 
   selectedPiecesType: string = '';
+
+  submitted = false;
+  wholeSubmitted = false;
+  piecesSubmitted = false;
+
+  orders: Map<String, Order>
+  bindedOrdersValues: Order[];
 
   constructor(private data: DataService, private formBuilder: FormBuilder) {
     this.wholeForm = this.formBuilder.group({
@@ -31,11 +40,17 @@ export class OrderComponent implements OnInit {
       selectPiecesType: [''],
       selectPiecesSize: [''],
       deboned: [''],
-      skinned: ['']
+      skinned: [''],
+      selectPiecesQuantity: ['']
     });
+
+    this.finalForm = this.formBuilder.group([]);
   }
 
   ngOnInit() {
+    this.piecesForm.controls['deboned'].disable()
+    this.piecesForm.controls['skinned'].disable()
+
     this.wholeSizes = new Array();
     this.piecesProducts = new Array();
     this.piecesSizes = new Array();
@@ -94,6 +109,8 @@ export class OrderComponent implements OnInit {
   }
 
   activateCheckBoxes(availableDeboned: boolean, availableSkinned: boolean) {
+    this.piecesForm.controls['deboned'].reset()
+    this.piecesForm.controls['skinned'].reset()
     if (!availableDeboned) {
       this.piecesForm.controls['deboned'].disable()
     } else {
@@ -106,8 +123,72 @@ export class OrderComponent implements OnInit {
     }
   }
 
-  submit() {
+  submitWhole() {
     console.log('Submit Called')
+    this.submitted = true;
+    this.wholeSubmitted = true;
+
+    if (this.orders == null) {
+      this.orders = new Map();
+    }
+
+    let key: string
+    key = 'Whole Chicken|' + this.wholeForm.controls['selectChickenSize'].value
+    if (this.orders.has(key)) {
+      let order: Order;
+      order = this.orders.get(key)
+      order.quantity = Number(order.quantity) + Number(this.wholeForm.controls['selectChickenQuantity'].value)
+      this.orders.delete(key)
+      this.orders.set(key, order);
+      console.log('updating existing entry in orders')
+    } else {
+      this.orders.set(key, 
+                      new Order('Whole Chicken',this.wholeForm.controls['selectChickenSize'].value, this.wholeForm.controls['selectChickenQuantity'].value));
+      console.log('adding new entry in orders')
+    }
+
+    this.bindedOrdersValues = Array.from(this.orders.values());
+  }
+
+  submitPieces() {
+    console.log('Submit Called')
+    this.submitted = true;
+    this.piecesSubmitted = true;
+
+    if (this.orders == null) {
+      this.orders = new Map();
+    }
+
+    let key: string
+    key = this.piecesForm.controls['selectPiecesType'].value + '|' + this.piecesForm.controls['selectPiecesSize'].value
+          + this.piecesForm.controls['deboned'].value + '|' + this.piecesForm.controls['skinned'].value;
+
+    if (this.orders.has(key)) {
+      let order: Order;
+      order = this.orders.get(key)
+      order.quantity = Number(order.quantity) + Number(this.piecesForm.controls['selectPiecesQuantity'].value);
+      this.orders.delete(key)
+      this.orders.set(key, order);
+      console.log('updating existing entry in orders')
+    } else {
+      this.orders.set(key, 
+                      new Order(this.piecesForm.controls['selectPiecesType'].value,
+                                this.piecesForm.controls['selectPiecesSize'].value,
+                                this.piecesForm.controls['selectPiecesQuantity'].value,
+                                this.piecesForm.controls['deboned'].value,
+                                this.piecesForm.controls['skinned'].value));
+      console.log('adding new entry in orders')
+    }
+
+    this.bindedOrdersValues = Array.from(this.orders.values());
+  }
+
+  submitFinal() {
+    console.log('final submit called')
+  }
+
+  handleRemove(event: any) {
+    console.log('remove order called')
   }
 
 }
