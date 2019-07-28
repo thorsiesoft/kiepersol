@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Order } from './order/order';
+import { SubmittedOrder } from './submittedOrder';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,7 @@ export class DataService {
     return this.http.get('http://localhost:8080/customers/')
   }
 
-  postOrders(orders: Order[]) {
-    orders.forEach(ord =>
-      this.http.post('http://localhost:8080/order/', ord))
+  postOrders(submittedOrder: SubmittedOrder) {
+    return this.http.post('http://localhost:8080/order/', submittedOrder);
   }
 }

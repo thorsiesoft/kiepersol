@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col form-group">
                 <label for="selectCustomer">Select Customer</label>
-                <select class="form-control" id="selectCustomer" formControlName="selectCustomer">
+                <select (change)="selectChangeCustomerHandler($event)" class="form-control" id="selectCustomer" formControlName="selectCustomer">
                     <option value="">--Select Customer--</option>
                     <option *ngFor="let customer of customers">{{ customer.name }}</option>
                 </select>
@@ -112,8 +112,54 @@
             </div>
         </div>
     </div>
-
 </form>
+
+<div class="spacer20"></div>
+
+
+<form [formGroup]="offalForm" (ngSubmit)="submitOffal()">
+        <div class="container-fluid mx-3 bg-light border border-dark rounded">
+            <div class="row top-buffer">
+                <div class="col">
+                    <h6>Offal</h6>
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col form-group">
+                    <label for="selectOffalType">Select Product</label>
+                    <select (change)="selectChangeOffalTypeHandler($event)" class="form-control"
+                        formControlName="selectOffalType" id="selectOffalType">
+                        <option value="">--Select Product--</option>
+                        <option *ngFor="let item of offalProducts">{{ item }}</option>
+                    </select>
+                </div>
+    
+                <div class="col form-group">
+                    <label for="selectOffalSize">Select Size</label>
+                    <select class="form-control" formControlName="selectOffalSize" id="selectOffalSize">
+                        <option value="">--Select Size--</option>
+                        <option *ngFor="let item of offalSizes">{{ item }}</option>
+                    </select>
+                </div>
+            </div>
+    
+            <div class="row top-buffer">
+                <div class="col form-group">
+                    <label for="selectOffalQuantity">Select Quantity</label>
+                    <select class="form-control" id="selectOffalQuantity" formControlName="selectOffalQuantity">
+                        <option value="">--Select Quantity--</option>
+                        <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                    </select>
+                </div>
+            </div>
+    
+            <div class="row top-buffer bottom-buffer">
+                <div class="col">
+                    <button type="submit" class="bg-secondary text-light">Add</button>
+                </div>
+            </div>
+        </div>
+    </form>
 
 <div class="spacer20"></div>
 
