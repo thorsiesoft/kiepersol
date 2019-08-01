@@ -6,7 +6,8 @@
         <div class="row">
             <div class="col form-group">
                 <label for="selectCustomer">Select Customer</label>
-                <select (change)="selectChangeCustomerHandler($event)" class="form-control" id="selectCustomer" formControlName="selectCustomer">
+                <select (change)="selectChangeCustomerHandler($event)" class="form-control" id="selectCustomer"
+                    formControlName="selectCustomer">
                     <option value="">--Select Customer--</option>
                     <option *ngFor="let customer of customers">{{ customer.name }}</option>
                 </select>
@@ -118,48 +119,48 @@
 
 
 <form [formGroup]="offalForm" (ngSubmit)="submitOffal()">
-        <div class="container-fluid mx-3 bg-light border border-dark rounded">
-            <div class="row top-buffer">
-                <div class="col">
-                    <h6>Offal</h6>
-                </div>
-            </div>
-            <div class="row top-buffer">
-                <div class="col form-group">
-                    <label for="selectOffalType">Select Product</label>
-                    <select (change)="selectChangeOffalTypeHandler($event)" class="form-control"
-                        formControlName="selectOffalType" id="selectOffalType">
-                        <option value="">--Select Product--</option>
-                        <option *ngFor="let item of offalProducts">{{ item }}</option>
-                    </select>
-                </div>
-    
-                <div class="col form-group">
-                    <label for="selectOffalSize">Select Size</label>
-                    <select class="form-control" formControlName="selectOffalSize" id="selectOffalSize">
-                        <option value="">--Select Size--</option>
-                        <option *ngFor="let item of offalSizes">{{ item }}</option>
-                    </select>
-                </div>
-            </div>
-    
-            <div class="row top-buffer">
-                <div class="col form-group">
-                    <label for="selectOffalQuantity">Select Quantity</label>
-                    <select class="form-control" id="selectOffalQuantity" formControlName="selectOffalQuantity">
-                        <option value="">--Select Quantity--</option>
-                        <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
-                    </select>
-                </div>
-            </div>
-    
-            <div class="row top-buffer bottom-buffer">
-                <div class="col">
-                    <button type="submit" class="bg-secondary text-light">Add</button>
-                </div>
+    <div class="container-fluid mx-3 bg-light border border-dark rounded">
+        <div class="row top-buffer">
+            <div class="col">
+                <h6>Offal</h6>
             </div>
         </div>
-    </form>
+        <div class="row top-buffer">
+            <div class="col form-group">
+                <label for="selectOffalType">Select Product</label>
+                <select (change)="selectChangeOffalTypeHandler($event)" class="form-control"
+                    formControlName="selectOffalType" id="selectOffalType">
+                    <option value="">--Select Product--</option>
+                    <option *ngFor="let item of offalProducts">{{ item }}</option>
+                </select>
+            </div>
+
+            <div class="col form-group">
+                <label for="selectOffalSize">Select Size</label>
+                <select class="form-control" formControlName="selectOffalSize" id="selectOffalSize">
+                    <option value="">--Select Size--</option>
+                    <option *ngFor="let item of offalSizes">{{ item }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row top-buffer">
+            <div class="col form-group">
+                <label for="selectOffalQuantity">Select Quantity</label>
+                <select class="form-control" id="selectOffalQuantity" formControlName="selectOffalQuantity">
+                    <option value="">--Select Quantity--</option>
+                    <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row top-buffer bottom-buffer">
+            <div class="col">
+                <button type="submit" class="bg-secondary text-light">Add</button>
+            </div>
+        </div>
+    </div>
+</form>
 
 <div class="spacer20"></div>
 
@@ -170,9 +171,18 @@
                 <h6>Summary</h6>
             </div>
         </div>
+
+        <div class="alert alert-danger alert-dismissible" *ngIf="submitWithoutCustomer">
+            <button (click)="dismissSubmitWithoutCustomer()" class="close" data-dismiss="alert" aria-label="close">&times;</button>
+                <strong>Please select a customer before submitting order</strong>
+        </div>
+
         <div class="row top-buffer">
             <div class="col">
-                <span>{{ customerForm.controls.selectCustomer.value }}</span>
+                <label class="font-weight-bold">Customer</label>
+                <br/>
+                <span *ngIf="!customerSelected" class="text-warning">Please select a customer above</span>
+                <span *ngIf="customerSelected">{{ customerForm.controls.selectCustomer.value }}</span>
             </div>
         </div>
 
@@ -208,5 +218,15 @@
                 <button type="submit">Submit</button>
             </div>
         </div>
+
+        <div class="alert alert-success alert-dismissible" *ngIf="submitSuccess">
+            <a href="/order" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong>
+        </div>
+
+        <!-- <div class="alert alert-danger alert-dismissible" *ngIf="!submitSuccess">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed!</strong>
+            </div> -->
     </div>
 </form>

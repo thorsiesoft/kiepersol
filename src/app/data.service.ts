@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
-import { Order } from './order/order';
 import { SubmittedOrder } from './submittedOrder';
+import { Observable } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,17 @@ export class DataService {
     return this.http.get('http://localhost:8080/customers/')
   }
 
-  postOrders(submittedOrder: SubmittedOrder) {
-    return this.http.post('http://localhost:8080/order/', submittedOrder);
+  getBatches() {
+    return this.http.get('http://localhost:8080/batch/')
+  }
+
+  postOrders(submittedOrder: SubmittedOrder): Observable<SubmittedOrder> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    })
+    let options = {
+      headers: httpHeaders
+    };
+    return this.http.post<SubmittedOrder>('http://localhost:8080/order/', submittedOrder, options);
   }
 }

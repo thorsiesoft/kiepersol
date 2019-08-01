@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Order } from './order';
 import { SubmittedOrder } from '../submittedOrder';
+import { HttpErrorResponse } from '@angular/common/http';
+import { identifierModuleUrl } from '@angular/compiler';
 
 @Component({
   selector: 'app-order',
@@ -10,6 +12,8 @@ import { SubmittedOrder } from '../submittedOrder';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
+
+  numbers = new Array(20).fill(0).map(Number.call, Number);
 
   wholeForm: FormGroup;
   piecesForm: FormGroup;
@@ -30,31 +34,31 @@ export class OrderComponent implements OnInit {
 
   selectedCustomer: string = '';
 
-  submitted = false;
-  wholeSubmitted = false;
-  piecesSubmitted = false;
+  submitSuccess: boolean;
+  customerSelected: boolean;
+  submitWithoutCustomer: boolean;
 
   orders: Map<String, Order>
   bindedOrdersValues: Order[];
 
   constructor(private data: DataService, private formBuilder: FormBuilder) {
     this.wholeForm = this.formBuilder.group({
-      selectChickenSize: [''],
-      selectChickenQuantity: [''],
+      selectChickenSize: ['', Validators.required],
+      selectChickenQuantity: ['', Validators.required],
     });
 
     this.piecesForm = this.formBuilder.group({
-      selectPiecesType: [''],
-      selectPiecesSize: [''],
+      selectPiecesType: ['', Validators.required],
+      selectPiecesSize: ['', Validators.required],
       deboned: [''],
       skinned: [''],
-      selectPiecesQuantity: ['']
+      selectPiecesQuantity: ['', Validators.required]
     });
 
     this.offalForm = this.formBuilder.group({
-      selectOffalType: [''],
-      selectOffalSize: [''],
-      selectOffalQuantity: ['']
+      selectOffalType: ['', Validators.required],
+      selectOffalSize: ['', Validators.required],
+      selectOffalQuantity: ['', Validators.required]
     });
 
     this.finalForm = this.formBuilder.group([]);
@@ -75,7 +79,7 @@ export class OrderComponent implements OnInit {
     this.offalSizes = new Array();
 
     this.offalItems = new Array();
-    this.wholeItems = new Array();
+    this.wholeItems = new Array(); //delete
     this.piecesItems = new Array();
 
     this.data.getOrderItems().subscribe((res: any[]) => {
@@ -111,6 +115,12 @@ export class OrderComponent implements OnInit {
 
   selectChangeCustomerHandler(event: any) {
     this.selectedCustomer = event.target.value;
+    if (!(this.selectedCustomer == '')) {
+      this.customerSelected = true;
+      this.submitWithoutCustomer = false;
+    } else {
+      this.customerSelected = false;
+    }
   }
 
   selectChangePiecesTypeHandler(event: any) {
@@ -171,93 +181,103 @@ export class OrderComponent implements OnInit {
 
   submitWhole() {
     console.log('Submit Called')
-    this.submitted = true;
-    this.wholeSubmitted = true;
 
-    if (this.orders == null) {
-      this.orders = new Map();
-    }
-
-    let key: string
-    key = 'CHICKEN|' + this.wholeForm.controls['selectChickenSize'].value + '|' + null + '|' + null
-    if (this.orders.has(key)) {
-      let order: Order;
-      order = this.orders.get(key)
-      order.quantity = Number(order.quantity) + Number(this.wholeForm.controls['selectChickenQuantity'].value)
-      this.orders.delete(key)
-      this.orders.set(key, order);
-      console.log('updating existing entry in orders')
+    if (this.wholeForm.invalid) {
+      return;
     } else {
-      this.orders.set(key, 
-                      new Order('CHICKEN',this.wholeForm.controls['selectChickenSize'].value, 
-                      this.wholeForm.controls['selectChickenQuantity'].value, null, null));
-      console.log('adding new entry in orders')
-    }
+      if (this.orders == null) {
+        this.orders = new Map();
+      }
 
-    this.bindedOrdersValues = Array.from(this.orders.values());
+      let key: string
+      key = 'CHICKEN|' + this.wholeForm.controls['selectChickenSize'].value + '|' + null + '|' + null
+      if (this.orders.has(key)) {
+        let order: Order;
+        order = this.orders.get(key)
+        order.quantity = Number(order.quantity) + Number(this.wholeForm.controls['selectChickenQuantity'].value)
+        this.orders.delete(key)
+        this.orders.set(key, order);
+        console.log('updating existing entry in orders')
+      } else {
+        this.orders.set(key,
+          new Order('CHICKEN', this.wholeForm.controls['selectChickenSize'].value,
+            this.wholeForm.controls['selectChickenQuantity'].value, null, null));
+        console.log('adding new entry in orders')
+      }
+
+      this.bindedOrdersValues = Array.from(this.orders.values());
+    }
   }
 
   submitPieces() {
     console.log('Submit Called')
-    this.submitted = true;
-    this.piecesSubmitted = true;
 
-    if (this.orders == null) {
-      this.orders = new Map();
-    }
-
-    let key: string
-    key = this.piecesForm.controls['selectPiecesType'].value + '|' + this.piecesForm.controls['selectPiecesSize'].value
-          + '|' + this.piecesForm.controls['deboned'].value + '|' + this.piecesForm.controls['skinned'].value;
-
-    if (this.orders.has(key)) {
-      let order: Order;
-      order = this.orders.get(key)
-      order.quantity = Number(order.quantity) + Number(this.piecesForm.controls['selectPiecesQuantity'].value);
-      this.orders.delete(key)
-      this.orders.set(key, order);
-      console.log('updating existing entry in orders')
+    if (this.piecesForm.invalid) {
+      return;
     } else {
-      this.orders.set(key, 
-                      new Order(this.piecesForm.controls['selectPiecesType'].value,
-                                this.piecesForm.controls['selectPiecesSize'].value,
-                                this.piecesForm.controls['selectPiecesQuantity'].value,
-                                this.piecesForm.controls['deboned'].value,
-                                this.piecesForm.controls['skinned'].value));
-      console.log('adding new entry in orders')
+      if (this.orders == null) {
+        this.orders = new Map();
+      }
+
+      let key: string
+      key = this.piecesForm.controls['selectPiecesType'].value + '|' + this.piecesForm.controls['selectPiecesSize'].value
+        + '|' + this.piecesForm.controls['deboned'].value + '|' + this.piecesForm.controls['skinned'].value;
+
+      if (this.orders.has(key)) {
+        let order: Order;
+        order = this.orders.get(key)
+        order.quantity = Number(order.quantity) + Number(this.piecesForm.controls['selectPiecesQuantity'].value);
+        this.orders.delete(key)
+        this.orders.set(key, order);
+        console.log('updating existing entry in orders')
+      } else {
+        this.orders.set(key,
+          new Order(this.piecesForm.controls['selectPiecesType'].value,
+            this.piecesForm.controls['selectPiecesSize'].value,
+            this.piecesForm.controls['selectPiecesQuantity'].value,
+            this.piecesForm.controls['deboned'].value,
+            this.piecesForm.controls['skinned'].value));
+        console.log('adding new entry in orders')
+      }
+
+      this.bindedOrdersValues = Array.from(this.orders.values());
     }
 
-    this.bindedOrdersValues = Array.from(this.orders.values());
   }
 
   submitOffal() {
     console.log('Submit Offal Called')
 
-    if (this.orders == null) {
-      this.orders = new Map();
-    }
-
-    let key: string
-    key = this.offalForm.controls['selectOffalType'].value + '|' + this.offalForm.controls['selectOffalSize'].value
-    + '|' + null + '|' + null;
-
-    if (this.orders.has(key)) {
-      let order: Order;
-      order = this.orders.get(key)
-      order.quantity = Number(order.quantity) + Number(this.offalForm.controls['selectOffalQuantity'].value);
-      this.orders.delete(key)
-      this.orders.set(key, order);
-      console.log('updating existing entry in orders')
+    if (this.offalForm.invalid) {
+      return;
     } else {
-      this.orders.set(key, 
-                      new Order(this.offalForm.controls['selectOffalType'].value,
-                                this.offalForm.controls['selectOffalSize'].value,
-                                this.offalForm.controls['selectOffalQuantity'].value,
-                                null, null));
-      console.log('adding new entry in orders')
+      if (this.orders == null) {
+        this.orders = new Map();
+      }
+
+      let key: string
+      key = this.offalForm.controls['selectOffalType'].value + '|' + this.offalForm.controls['selectOffalSize'].value
+        + '|' + null + '|' + null;
+
+      if (this.orders.has(key)) {
+        let order: Order;
+        order = this.orders.get(key)
+        order.quantity = Number(order.quantity) + Number(this.offalForm.controls['selectOffalQuantity'].value);
+        this.orders.delete(key)
+        this.orders.set(key, order);
+        console.log('updating existing entry in orders')
+      } else {
+        this.orders.set(key,
+          new Order(this.offalForm.controls['selectOffalType'].value,
+            this.offalForm.controls['selectOffalSize'].value,
+            this.offalForm.controls['selectOffalQuantity'].value,
+            null, null));
+        console.log('adding new entry in orders')
+      }
+
+      this.bindedOrdersValues = Array.from(this.orders.values());
     }
 
-    this.bindedOrdersValues = Array.from(this.orders.values());
   }
 
   handleRemove(order: Order) {
@@ -270,11 +290,32 @@ export class OrderComponent implements OnInit {
 
   submitFinal() {
     console.log('final submit called')
-    let submittedOrder: SubmittedOrder;
-    submittedOrder = new SubmittedOrder(this.selectedCustomer, Array.from(this.orders.values()))
-    this.data.postOrders(submittedOrder).subscribe(order => {
+
+    if (this.customerSelected) {
+      let success: boolean = true;
+      let submittedOrder: SubmittedOrder;
+      submittedOrder = new SubmittedOrder(this.selectedCustomer, Array.from(this.orders.values()))
+      this.data.postOrders(submittedOrder).subscribe(order => {
         console.log(order);
-    });
+      }, (err: HttpErrorResponse) => {
+        success = false;
+        console.log('Submit order returned error, stats: ' + err.status + ' error: ' + err.error + ' message: ' + err.message);
+      });
+
+      if (success) {
+        this.orders = new Map();
+        this.bindedOrdersValues = Array.from(this.orders.values());
+        this.submitSuccess = true;
+      }
+    } else {
+      this.submitWithoutCustomer = true;
+    }
+
+  }
+
+  dismissSubmitWithoutCustomer() {
+    console.log('dismissing error')
+    this.submitWithoutCustomer = false;
   }
 
 }

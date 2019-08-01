@@ -2,11 +2,11 @@ import { Order } from './order/order';
 
 export class SubmittedOrder {
 
-    customer: string;
+    customerName: string;
     orders: Array<Order>;
 
-    constructor(customer: string, orders: Array<Order>) {
-        this.customer = customer;
+    constructor(customerName: string, orders: Array<Order>) {
+        this.customerName = customerName;
         this.orders = orders;
     }
 }

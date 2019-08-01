@@ -1,1 +1,57 @@
-<p>inventory works!</p>
+<h3>Inventory</h3>
+<div class="spacer20"></div>
+
+<form [formGroup]="batchForm">
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+        <div class="row">
+            <div class="col form-group">
+                <label for="selectBatch">Select Batch</label>
+                <select (change)="selectChangeBatchHandler($event)" class="form-control" id="selectBatch"
+                        formControlName="selectBatch">
+                    <option value="">--Select Batch--</option>
+                    <option *ngFor="let batch of batches">{{ batch }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="spacer20"></div>
+
+<form [formGroup]="wholeForm" (ngSubmit)="submitWhole()">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded">
+        <div class="row top-buffer">
+            <div class="col">
+                <h6>Whole Chickens</h6>
+            </div>
+        </div>
+        <div class="row top-buffer">
+            <div class="col">
+                <div class="form-group">
+                    <label for="selectChickenSize">Select Size</label>
+                    <select class="form-control" id="selectChickenSize" formControlName="selectChickenSize">
+                        <option value="">--Select Size--</option>
+                        <option *ngFor="let item of wholeSizes">{{ item }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="selectChickenQuantity">Select Quantity</label>
+                    <select class="form-control" id="selectChickenQuantity" formControlName="selectChickenQuantity">
+                        <option value="">--Select Quantity--</option>
+                        <option *ngFor="let n of numbers">{{ n }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row top-buffer bottom-buffer">
+            <div class="col">
+                <button type="submit" class="bg-secondary text-light">Add to batch</button>
+            </div>
+        </div>
+
+    </div>
+</form>
