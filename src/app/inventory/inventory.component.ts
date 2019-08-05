@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Batch } from '../batch';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-inventory',
@@ -12,18 +14,22 @@ export class InventoryComponent implements OnInit {
   batchForm: FormGroup;
   wholeForm: FormGroup;
 
-  batches: Array<any>;
+  batches: Array<Batch>;
   wholeSizes: Array<string>;
 
   numbers = new Array(50).fill(0).map(Number.call, Number);
 
-  constructor(private data: DataService, private formBuilder: FormBuilder) { 
+  submitBatchSuccess: boolean;
+
+  constructor(private data: DataService, private formBuilder: FormBuilder) {
     this.batchForm = this.formBuilder.group({
-      selectBatch: ['']
+      selectBatch: [''],
+      inputHouseNumber: ['', Validators.required],
+      inputBatchDate: ['', Validators.required]
     });
 
     this.wholeForm = this.formBuilder.group({
-      selectChickenSize: ['', Validators.required],
+      inputChickenPrice: ['', Validators.required],
       selectChickenQuantity: ['', Validators.required],
     });
   }
@@ -33,7 +39,7 @@ export class InventoryComponent implements OnInit {
 
     this.data.getBatches().subscribe((res: any[]) => {
       res.forEach(element => {
-        this.batches.push(element.batchDate);
+        this.batches.push(new Batch(element.batchDate, element.houseNumber));
       })
     });
 
@@ -52,6 +58,42 @@ export class InventoryComponent implements OnInit {
 
   selectChangeBatchHandler(event: any) {
     console.log('selected batch changed')
+  }
+
+  submitBatch() {
+    console.log('Submit Batch Called')
+
+    if (this.batchForm.invalid) {
+      return;
+    } else {
+      let success: boolean = true;
+      let batch: Batch;
+      batch = new Batch(this.batchForm.controls['inputBatchDate'].value, this.batchForm.controls['inputHouseNumber'].value);
+
+      this.data.postBatch(batch).subscribe(batch => {
+        console.log(batch);
+      }, (err: HttpErrorResponse) => {
+        success = false;
+        console.log('Submit batch returned error, stats: ' + err.status + ' error: ' + err.error + ' message: ' + err.message);
+      });
+
+      if (success) {
+        this.submitBatchSuccess = true;
+        this.batches = new Array();
+
+        this.data.getBatches().subscribe((res: any[]) => {
+          res.forEach(element => {
+            console.log(element.id);
+            this.batches.push(new Batch(element.batchDate, element.houseNumber));
+          })
+        });
+      }
+    }
+  }
+
+  dismissBatchSuccess() {
+    console.log('dismissing error')
+    this.submitBatchSuccess = false;
   }
 
   submitWhole() {

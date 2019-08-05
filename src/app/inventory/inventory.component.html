@@ -1,15 +1,49 @@
 <h3>Inventory</h3>
 <div class="spacer20"></div>
 
-<form [formGroup]="batchForm">
+<form [formGroup]="batchForm" (ngSubmit)="submitBatch()">
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+        <div class="row top-buffer">
+            <div class="col">
+                <h6>Create New Batch</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                <label for="inputBatchDate">Batch Date</label>
+                <input type="date" class="form-control" id="inputBatchDate" formControlName="inputBatchDate">
+            </div>
+            <div class="col form-group">
+                <label for="inputHouseNumber">House Number</label>
+                <input type="text" class="form-control" id="inputHouseNumber" formControlName="inputHouseNumber">
+            </div>
+        </div>
+        <div class="row top-buffer bottom-buffer">
+            <div class="col">
+                <button type="submit" class="bg-secondary text-light">Create Batch</button>
+            </div>
+        </div>
+
+        <div class="alert alert-success alert-dismissible" *ngIf="submitBatchSuccess">
+            <button (click)="dismissBatchSuccess()"  class="close" data-dismiss="alert" aria-label="close">&times;</button>
+            <strong>Success!</strong>
+        </div>
+    </div>
+    <div class="container-fluid">
+    <div class="row top-buffer">
+            <div class="col">
+                <h6>OR</h6>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
         <div class="row">
             <div class="col form-group">
                 <label for="selectBatch">Select Batch</label>
                 <select (change)="selectChangeBatchHandler($event)" class="form-control" id="selectBatch"
-                        formControlName="selectBatch">
+                    formControlName="selectBatch">
                     <option value="">--Select Batch--</option>
-                    <option *ngFor="let batch of batches">{{ batch }}</option>
+                    <option *ngFor="let batch of batches">{{ batch.batchDate }} | house: {{ batch.houseNumber }}</option>
                 </select>
             </div>
         </div>
@@ -28,11 +62,8 @@
         <div class="row top-buffer">
             <div class="col">
                 <div class="form-group">
-                    <label for="selectChickenSize">Select Size</label>
-                    <select class="form-control" id="selectChickenSize" formControlName="selectChickenSize">
-                        <option value="">--Select Size--</option>
-                        <option *ngFor="let item of wholeSizes">{{ item }}</option>
-                    </select>
+                    <label for="inputChickenPrice">Enter Price</label>
+                    <input type="text" class="form-control" id="inputChickenPrice" formControlName="inputChickenPrice" placeholder="100.00">
                 </div>
             </div>
 
