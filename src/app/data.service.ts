@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { SubmittedOrder } from './submittedOrder';
+import { SubmittedInventory } from './submittedInventory';
 import { Batch } from './batch';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
@@ -28,6 +29,10 @@ export class DataService {
     return this.http.get('http://localhost:8080/customers/')
   }
 
+  getCustomerGroups() {
+    return this.http.get('http://localhost:8080/customers/groups')
+  }
+
   getBatches() {
     return this.http.get('http://localhost:8080/batch/')
   }
@@ -50,5 +55,15 @@ export class DataService {
       headers: httpHeaders
     };
     return this.http.post<Batch>('http://localhost:8080/batch/', batch, options);
+  }
+
+  postInventory(submittedInventory: SubmittedInventory): Observable<SubmittedInventory> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    })
+    let options = {
+      headers: httpHeaders
+    };
+    return this.http.post<SubmittedInventory>('http://localhost:8080/inventory/', submittedInventory, options);
   }
 }

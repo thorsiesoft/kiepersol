@@ -1,0 +1,51 @@
+<h3>Klient Groepe</h3>
+<div class="spacer20"></div>
+
+<form [formGroup]="groupForm" (ngSubmit)="submitGroup()">
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+        <div class="row">
+            <div class="col form-group">
+                <label for="selectCustomerGroup">Kies Klient Groep</label>
+                <select (change)="selectChangeCustomerGroupHandler($event)" class="form-control"
+                    id="selectCustomerGroup" formControlName="selectCustomerGroup">
+                    <option value="">--Kies Klient Groep--</option>
+                    <option *ngFor="let group of groups">{{ group }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer20"></div>
+    <div class="container-fluid">
+        <div class="row top-buffer">
+            <div class="col">
+                <h6>OF...</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+        <div class="row top-buffer">
+            <div class="col">
+                <h6>Nuwe Klient Groep</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                <label for="inputGroupName">Groep Naam</label>
+                <input type="text" class="form-control" id="inputGroupName" formControlName="inputGroupName">
+            </div>
+        </div>
+        <div class="row top-buffer bottom-buffer">
+            <div class="col">
+                <button type="submit" class="bg-secondary text-light">Maak nuwe groep</button>
+            </div>
+        </div>
+
+        <div class="alert alert-success alert-dismissible" *ngIf="submitGroupSuccess">
+            <button (click)="dismissGroupSuccess()" class="close" data-dismiss="alert"
+                aria-label="close">&times;</button>
+            <strong>Success!</strong>
+        </div>
+    </div>
+</form>

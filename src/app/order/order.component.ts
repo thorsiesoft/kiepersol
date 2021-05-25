@@ -5,6 +5,7 @@ import { Order } from './order';
 import { SubmittedOrder } from '../submittedOrder';
 import { HttpErrorResponse } from '@angular/common/http';
 import { identifierModuleUrl } from '@angular/compiler';
+import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view/util';
 
 @Component({
   selector: 'app-order',
@@ -37,6 +38,10 @@ export class OrderComponent implements OnInit {
   submitSuccess: boolean;
   customerSelected: boolean;
   submitWithoutCustomer: boolean;
+
+  wholeChickenSelected: boolean;
+  piecesSelected: boolean;
+  offalSelected: boolean;
 
   orders: Map<String, Order>
   bindedOrdersValues: Order[];
@@ -183,6 +188,7 @@ export class OrderComponent implements OnInit {
     console.log('Submit Called')
 
     if (this.wholeForm.invalid) {
+      console.log('Form invalid, not doing anything')
       return;
     } else {
       if (this.orders == null) {
@@ -316,6 +322,24 @@ export class OrderComponent implements OnInit {
   dismissSubmitWithoutCustomer() {
     console.log('dismissing error')
     this.submitWithoutCustomer = false;
+  }
+
+  radioChangeHandler(event: any) {
+    console.log('chicken radio change detected: ' + event.target.value)
+    let selection: string = event.target.value
+    if (selection == 'Whole') {
+      this.wholeChickenSelected = true;
+      this.piecesSelected = false;
+      this.offalSelected = false;
+    } else if (selection == 'Pieces') {
+      this.wholeChickenSelected = false;
+      this.piecesSelected = true;
+      this.offalSelected = false;
+    } else if (selection == 'Offal') {
+      this.wholeChickenSelected = false;
+      this.piecesSelected = false;
+      this.offalSelected = true;
+    }
   }
 
 }

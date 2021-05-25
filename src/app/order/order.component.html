@@ -1,4 +1,4 @@
-<h3>Order</h3>
+<h3>Bestellings</h3>
 <div class="spacer20"></div>
 
 <form [formGroup]="customerForm">
@@ -14,12 +14,35 @@
             </div>
         </div>
     </div>
+    <div class="spacer20"></div>
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+        <div class="row">
+            <div class="col form-group">
+                <div class="form-check form-check-inline" id="selectOrderTypeRadios">
+                    <input class="form-check-input" type="radio" (change)="radioChangeHandler($event)" 
+                    name="inlineRadioOptions" id="chickenRadio"
+                        value="Whole">
+                    <label class="form-check-label" for="chickenRadio">Whole Chickens</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" (change)="radioChangeHandler($event)" name="inlineRadioOptions" id="piecesRadio"
+                        value="Pieces">
+                    <label class="form-check-label" for="inlinepiecesRadioRadio2">Pieces</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" (change)="radioChangeHandler($event)" name="inlineRadioOptions" id="offalRadio"
+                        value="Offal">
+                    <label class="form-check-label" for="offalRadio">Offal</label>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 <div class="spacer20"></div>
 
 <form [formGroup]="wholeForm" (ngSubmit)="submitWhole()">
-    <div class="container-fluid mx-3 bg-light border border-dark rounded">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded" *ngIf="wholeChickenSelected">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Whole Chickens</h6>
@@ -41,7 +64,7 @@
                     <label for="selectChickenQuantity">Select Quantity</label>
                     <select class="form-control" id="selectChickenQuantity" formControlName="selectChickenQuantity">
                         <option value="">--Select Quantity--</option>
-                        <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                        <option *ngFor="let n of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">{{ n }}</option>
                     </select>
                 </div>
             </div>
@@ -59,7 +82,7 @@
 <div class="spacer20"></div>
 
 <form [formGroup]="piecesForm" (ngSubmit)="submitPieces()">
-    <div class="container-fluid mx-3 bg-light border border-dark rounded">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded" *ngIf="piecesSelected">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Pieces</h6>
@@ -102,7 +125,7 @@
                 <label for="selectPiecesQuantity">Select Quantity</label>
                 <select class="form-control" id="selectPiecesQuantity" formControlName="selectPiecesQuantity">
                     <option value="">--Select Quantity--</option>
-                    <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                    <option *ngFor="let n of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">{{ n }}</option>
                 </select>
             </div>
         </div>
@@ -119,7 +142,7 @@
 
 
 <form [formGroup]="offalForm" (ngSubmit)="submitOffal()">
-    <div class="container-fluid mx-3 bg-light border border-dark rounded">
+    <div class="container-fluid mx-3 bg-light border border-dark rounded" *ngIf="offalSelected">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Offal</h6>
@@ -149,7 +172,7 @@
                 <label for="selectOffalQuantity">Select Quantity</label>
                 <select class="form-control" id="selectOffalQuantity" formControlName="selectOffalQuantity">
                     <option value="">--Select Quantity--</option>
-                    <option *ngFor="let n of [1,2,3,4,5]">{{ n }}</option>
+                    <option *ngFor="let n of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">{{ n }}</option>
                 </select>
             </div>
         </div>
@@ -173,14 +196,15 @@
         </div>
 
         <div class="alert alert-danger alert-dismissible" *ngIf="submitWithoutCustomer">
-            <button (click)="dismissSubmitWithoutCustomer()" class="close" data-dismiss="alert" aria-label="close">&times;</button>
-                <strong>Please select a customer before submitting order</strong>
+            <button (click)="dismissSubmitWithoutCustomer()" class="close" data-dismiss="alert"
+                aria-label="close">&times;</button>
+            <strong>Please select a customer before submitting order</strong>
         </div>
 
         <div class="row top-buffer">
             <div class="col">
                 <label class="font-weight-bold">Customer</label>
-                <br/>
+                <br />
                 <span *ngIf="!customerSelected" class="text-warning">Please select a customer above</span>
                 <span *ngIf="customerSelected">{{ customerForm.controls.selectCustomer.value }}</span>
             </div>

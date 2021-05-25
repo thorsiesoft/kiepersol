@@ -25,26 +25,15 @@
         </div>
 
         <div class="alert alert-success alert-dismissible" *ngIf="submitBatchSuccess">
-            <button (click)="dismissBatchSuccess()"  class="close" data-dismiss="alert" aria-label="close">&times;</button>
+            <button (click)="dismissBatchSuccess()" class="close" data-dismiss="alert"
+                aria-label="close">&times;</button>
             <strong>Success!</strong>
         </div>
     </div>
     <div class="container-fluid">
-    <div class="row top-buffer">
+        <div class="row top-buffer">
             <div class="col">
                 <h6>OR</h6>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
-        <div class="row">
-            <div class="col form-group">
-                <label for="selectBatch">Select Batch</label>
-                <select (change)="selectChangeBatchHandler($event)" class="form-control" id="selectBatch"
-                    formControlName="selectBatch">
-                    <option value="">--Select Batch--</option>
-                    <option *ngFor="let batch of batches">{{ batch.batchDate }} | house: {{ batch.houseNumber }}</option>
-                </select>
             </div>
         </div>
     </div>
@@ -54,35 +43,59 @@
 
 <form [formGroup]="wholeForm" (ngSubmit)="submitWhole()">
     <div class="container-fluid mx-3 bg-light border border-dark rounded">
-        <div class="row top-buffer">
-            <div class="col">
-                <h6>Whole Chickens</h6>
+        <div class="row">
+            <div class="col form-group">
+                <label for="selectBatch">Select Batch</label>
+                <select (change)="selectChangeBatchDateHandler($event)" class="form-control" id="selectBatchDate"
+                    formControlName="selectBatchDate">
+                    <option value="">--Select Batch--</option>
+                    <option *ngFor="let batchDate of batchDates">{{ batchDate }}</option>
+                </select>
+            </div>
+            <div class="col form-group">
+                <label for="selectHouseNumber">Select House Number</label>
+                <select (change)="selectChangeHouseNumberHandler($event)" class="form-control" id="selectHouseNumber"
+                    formControlName="selectHouseNumber">
+                    <option value="">--Select House Number--</option>
+                    <option *ngFor="let houseNumber of houses">{{ houseNumber }}</option>
+                </select>
             </div>
         </div>
-        <div class="row top-buffer">
-            <div class="col">
-                <div class="form-group">
-                    <label for="inputChickenPrice">Enter Price</label>
-                    <input type="text" class="form-control" id="inputChickenPrice" formControlName="inputChickenPrice" placeholder="100.00">
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="form-group">
-                    <label for="selectChickenQuantity">Select Quantity</label>
-                    <select class="form-control" id="selectChickenQuantity" formControlName="selectChickenQuantity">
-                        <option value="">--Select Quantity--</option>
-                        <option *ngFor="let n of numbers">{{ n }}</option>
-                    </select>
-                </div>
+    <div class="row top-buffer">
+        <div class="col">
+            <h6>Whole Chickens</h6>
+        </div>
+    </div>
+    <div class="row top-buffer">
+        <div class="col">
+            <div class="form-group">
+                <label for="inputChickenPrice">Enter Price</label>
+                <input type="text" class="form-control" id="inputChickenPrice" formControlName="inputChickenPrice"
+                    placeholder="100.00">
             </div>
         </div>
 
-        <div class="row top-buffer bottom-buffer">
-            <div class="col">
-                <button type="submit" class="bg-secondary text-light">Add to batch</button>
+        <div class="col">
+            <div class="form-group">
+                <label for="selectChickenQuantity">Select Quantity</label>
+                <select class="form-control" id="selectChickenQuantity" formControlName="selectChickenQuantity">
+                    <option value="">--Select Quantity--</option>
+                    <option *ngFor="let n of numbers">{{ n }}</option>
+                </select>
             </div>
         </div>
+    </div>
 
+    <div class="row top-buffer bottom-buffer">
+        <div class="col">
+            <button type="submit" class="bg-secondary text-light">Add to batch</button>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissible" *ngIf="submitInventorySuccess">
+        <button (click)="dismissInventorySuccess()" class="close" data-dismiss="alert"
+            aria-label="close">&times;</button>
+        <strong>Success!</strong>
+    </div>
     </div>
 </form>
