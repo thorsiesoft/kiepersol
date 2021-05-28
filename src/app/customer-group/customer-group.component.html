@@ -1,30 +1,102 @@
 <h3>Klient Groepe</h3>
 <div class="spacer20"></div>
 
-<form [formGroup]="groupForm" (ngSubmit)="submitGroup()">
+<form [formGroup]="viewGroupForm">
     <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
         <div class="row">
             <div class="col form-group">
                 <label for="selectCustomerGroup">Kies Klient Groep</label>
                 <select (change)="selectChangeCustomerGroupHandler($event)" class="form-control"
                     id="selectCustomerGroup" formControlName="selectCustomerGroup">
-                    <option value="">--Kies Klient Groep--</option>
-                    <option *ngFor="let group of groups">{{ group }}</option>
+                    <option value="unselected">--Kies Klient Groep--</option>
+                    <option *ngFor="let group of groups">{{ group.name }}</option>
                 </select>
             </div>
         </div>
     </div>
 
     <div class="spacer20"></div>
-    <div class="container-fluid">
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded" *ngIf="customersInGroup && !addingCustomer">
+        <div class="row">
+            <div class="col"><h6>Groep Beskrywing</h6></div>
+            <div class="col"><h6>Groep Kode</h6></div>
+        </div>    
+        <div class="row">
+            <div class="col"><p id="displayName">{{ selectedGroup.description }}</p></div>
+            <div class="col"><p id="displayName">{{ selectedGroup.code }}</p></div>
+        </div>
+    </div>
+    <div class="spacer20"></div>
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded" *ngIf="customersInGroup && !addingCustomer">
+        <div class="row top-buffer bottom-buffer">
+            <div class="col">
+                <button (click)="handleAddCustomerToGroupRequested()" type="button">Sit Nuwe Klient by Groep</button>
+            </div>
+        </div>
         <div class="row top-buffer">
             <div class="col">
-                <h6>OF...</h6>
+                <table class="table text-light">
+                    <thead>
+                        <tr>
+                            <th scope="col">Naam</th>
+                            <th scope="col">Agent</th>
+                            <th scope="col">Nommer</th>
+                            <th scope="col">Verander</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let customer of customersInGroup">
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.customerAgent }}</td>
+                            <td>{{ customer.customerNumber }}</td>
+                            <td><button (click)="handleChangeCustomer(customer)" type=”button”>Verander</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</form>
 
-    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+<form [formGroup]="addCustomerToGroupForm" (ngSubmit)="handleAddCustomerToGroup()">
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded" *ngIf="addingCustomer">
+        <div class="row top-buffer">
+            <div class="col">
+                <h6>Nuwe Klient</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                <label for="inputCustName">Klient Naam</label>
+                <input type="text" class="form-control" id="inputCustName" formControlName="inputCustName">
+                <label for="selectCustAgent">Kies Klient Agent</label>
+                <select (change)="selectCustAgentHandler($event)" class="form-control"
+                    id="selectCustAgent" formControlName="selectCustAgent">
+                    <option value="">--Kies Klient Agent--</option>
+                    <option *ngFor="let cust of customersInGroup" [value]="cust.id">{{ cust.name }}</option>
+                </select>
+                <label for="inputCustNumber">Klient Tel Nr</label>
+                <input type="text" class="form-control" id="inputCustNumber" formControlName="inputCustNumber">
+                <label for="inputCustEmail">Klient E-mail</label>
+                <input type="text" class="form-control" id="inputCustEmail" formControlName="inputCustEmail">
+            </div>
+        </div>
+        <div class="row top-buffer bottom-buffer">
+            <div class="col">
+                <button type="submit" class="bg-secondary text-light">Sit Nuwe Klient by Groep</button>
+            </div>
+        </div>
+
+        <div class="alert alert-success alert-dismissible" *ngIf="submitCustomerSuccess">
+            <button (click)="dismissCustomerSuccess()" class="close" data-dismiss="alert"
+                aria-label="close">&times;</button>
+            <strong>Success!</strong>
+        </div>
+    </div>
+</form>
+
+<form [formGroup]="addGroupForm" (ngSubmit)="handleAddGroup()">
+    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded" *ngIf="!customersInGroup && !addingCustomer">
         <div class="row top-buffer">
             <div class="col">
                 <h6>Nuwe Klient Groep</h6>
@@ -34,11 +106,17 @@
             <div class="col form-group">
                 <label for="inputGroupName">Groep Naam</label>
                 <input type="text" class="form-control" id="inputGroupName" formControlName="inputGroupName">
+                <label for="inputGroupDescription">Groep Beskrywing</label>
+                <input type="text" class="form-control" id="inputGroupDescription"
+                    formControlName="inputGroupDescription">
+                <label for="inputGroupCode">Groep Kode</label>
+                <input type="text" class="form-control" id="inputGroupCode" formControlName="inputGroupCode">
             </div>
         </div>
         <div class="row top-buffer bottom-buffer">
             <div class="col">
-                <button type="submit" class="bg-secondary text-light">Maak nuwe groep</button>
+                <button type="submit" class="bg-secondary text-light">Maak nuwe
+                    groep</button>
             </div>
         </div>
 

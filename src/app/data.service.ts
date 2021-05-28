@@ -5,6 +5,8 @@ import { SubmittedInventory } from './submittedInventory';
 import { Batch } from './batch';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { CustomerGroup} from './customerGroup';
+import { SubmittedCustomer } from './submittedCustomer';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +32,45 @@ export class DataService {
   }
 
   getCustomerGroups() {
-    return this.http.get('http://localhost:8080/customers/groups')
+    return this.http.get('http://localhost:8080/customer-groups/')
+  }
+
+  getCustomersInGroup(group: String) {
+    return this.http.get('http://localhost:8080/customers/' + group)
   }
 
   getBatches() {
     return this.http.get('http://localhost:8080/batch/')
+  }
+
+  postCustomer(customer: SubmittedCustomer, group: String): Observable<String> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    })
+    let options = {
+      headers: httpHeaders
+    };
+    return this.http.post<String>('http://localhost:8080/customers/' + group, customer, options);
+  }
+
+  postGroup(group: CustomerGroup): Observable<String> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    })
+    let options = {
+      headers: httpHeaders
+    };
+    return this.http.post<String>('http://localhost:8080/customer-groups/', group, options);
+  }
+
+  postExistingCustToGroup(groupId: number, customerId: number): Observable<String> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    })
+    let options = {
+      headers: httpHeaders
+    };
+    return this.http.post<String>('http://localhost:8080/customer-groups/' + groupId + '/customer/' + customerId, options);
   }
 
   postOrders(submittedOrder: SubmittedOrder): Observable<SubmittedOrder> {

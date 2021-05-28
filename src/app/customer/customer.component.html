@@ -3,28 +3,9 @@
 
 <form [formGroup]="customerSearchForm">
 
-    <!-- <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
-        <div class="row top-buffer">
-            <div class="col">
-                <h6>Soek Klient by Naam</h6>
-            </div>
-        </div>
-        <div class="wrap">
-          <div class="search">
-            <input type="text" [(ngModel)]="term" [ngModelOptions]="{standalone: true}" class="searchTerm" placeholder="Tik Klient Naam...">
-          </div>
-      
-          <div *ngFor="let item of customers | filter:term">
-            <p>
-              {{ item.name }}
-            </p>
-          </div>
-        </div>
-    </div> -->
-
     <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
 
-        <div class="row top-buffer" *ngIf="customers">
+        <div class="row top-buffer" *ngIf="customers && !changingCustomerGroup">
 
             <div class="wrap">
                 <div class="search">
@@ -37,21 +18,25 @@
                         <thead>
                             <tr>
                                 <th scope="col">Naam</th>
-                                <th scope="col">Alias</th>
                                 <th scope="col">Groep</th>
                                 <th scope="col">Agent</th>
                                 <th scope="col">Nommer</th>
-                                <th scope="col">Verander</th>
+                                <th scope="col">Tel</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Verander Groep</th>
+                                <th scope="col">Delete</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let customer of customers | filter:term">
                                 <td>{{ customer.name }}</td>
-                                <td>{{ customer.scanAlias }}</td>
-                                <td>{{ customer.customerGroup }}</td>
+                                <td>{{ customer.group }}</td>
                                 <td>{{ customer.customerAgent }}</td>
                                 <td>{{ customer.customerNumber }}</td>
-                                <td><button (click)="handleRemove(order)" type=”button”>Verander</button></td>
+                                <td>{{ customer.contactNumber }}</td>
+                                <td>{{ customer.email }}</td>
+                                <td><button (click)="handleChangeCustomerGroup(customer)" type=”button”>Verander Groep</button></td>
+                                <td><button (click)="handleDeleteCustomer(customer)" type=”button”>Delete</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -59,61 +44,36 @@
             </div>
         </div>
     </div>
+    </form>
 
-    <!-- <div class="container-fluid">
-        <div class="row top-buffer">
-            <div class="col">
-                <h6>OF...</h6>
+    <form [formGroup]="changeCustGroupform" *ngIf="changingCustomerGroup" (ngSubmit)="handleSubmitChangeCustomerGroup()">
+        <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
+            <div class="row">
+                <label for="displayName">Klient</label>
+            </div>    
+            <div class="row">
+                <p id="displayName">{{ customerSelectedForChange.name }}</p>
+            </div>
+            
+            <div class="row">
+                <div class="col form-group">
+                    <label for="selectCustomerGroup">Kies Klient Groep</label>
+                    <select (change)="selectChangeCustomerGroupHandler($event)" class="form-control"
+                        id="selectCustomerGroup" formControlName="selectCustomerGroup">
+                        <option value="">--Kies Klient Groep--</option>
+                        <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row top-buffer bottom-buffer">
+                <div class="col">
+                    <button type="submit" class="bg-secondary text-light">Sit Klient by Groep</button>
+                </div>
+            </div>
+            <div class="alert alert-success alert-dismissible" *ngIf="submitCustGroupChangeSuccess">
+                <button (click)="dismissCustGroupChangeSuccess()" class="close" data-dismiss="alert"
+                    aria-label="close">&times;</button>
+                <strong>Success!</strong>
             </div>
         </div>
-    </div>
-</form>
-
-<form [formGroup]="groupForm" (ngSubmit)="submitGroup()">
-    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
-        <div class="row">
-            <div class="col form-group">
-                <label for="selectCustomerGroup">Kies Klient Groep</label>
-                <select (change)="selectChangeCustomerGroupHandler($event)" class="form-control"
-                    id="selectCustomerGroup" formControlName="selectCustomerGroup">
-                    <option value="">--Kies Klient Groep--</option>
-                    <option *ngFor="let group of groups">{{ group }}</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="spacer20"></div>
-    <div class="container-fluid">
-        <div class="row top-buffer">
-            <div class="col">
-                <h6>OF...</h6>
-            </div>
-        </div>
-    </div>
-
-    <div class="container-fluid mx-3 bg-secondary text-light border border-dark rounded">
-        <div class="row top-buffer">
-            <div class="col">
-                <h6>Nuwe Klient Groep</h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col form-group">
-                <label for="inputGroupName">Groep Naam</label>
-                <input type="text" class="form-control" id="inputGroupName" formControlName="inputGroupName">
-            </div>
-        </div>
-        <div class="row top-buffer bottom-buffer">
-            <div class="col">
-                <button type="submit" class="bg-secondary text-light">Maak nuwe groep</button>
-            </div>
-        </div>
-
-        <div class="alert alert-success alert-dismissible" *ngIf="submitGroupSuccess">
-            <button (click)="dismissGroupSuccess()" class="close" data-dismiss="alert"
-                aria-label="close">&times;</button>
-            <strong>Success!</strong>
-        </div>
-    </div>
-</form> -->
+    </form>
