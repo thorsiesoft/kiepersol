@@ -85,6 +85,9 @@
             <div class="col">
                 <button type="submit" class="bg-secondary text-light">Sit Nuwe Klient by Groep</button>
             </div>
+            <div class="col">
+                <button (click)="handleCancelAdd()" type="button" class="bg-secondary text-light">Kanselleer</button>
+            </div>
         </div>
 
         <div class="alert alert-success alert-dismissible" *ngIf="submitCustomerSuccess">

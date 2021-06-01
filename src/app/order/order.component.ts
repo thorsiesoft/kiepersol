@@ -6,6 +6,7 @@ import { SubmittedOrder } from '../submittedOrder';
 import { HttpErrorResponse } from '@angular/common/http';
 import { identifierModuleUrl } from '@angular/compiler';
 import { getAttrsForDirectiveMatching } from '@angular/compiler/src/render3/view/util';
+import { Group} from '../customer-group/group';
 
 @Component({
   selector: 'app-order',
@@ -45,6 +46,9 @@ export class OrderComponent implements OnInit {
 
   orders: Map<String, Order>
   bindedOrdersValues: Order[];
+
+  groups: Group[];
+  customersInGroup: Object;
 
   constructor(private data: DataService, private formBuilder: FormBuilder) {
     this.wholeForm = this.formBuilder.group({
@@ -112,10 +116,29 @@ export class OrderComponent implements OnInit {
       })
     });
 
+    this.data.getCustomerGroups().subscribe((res: any[]) => {
+      this.groups = res
+    });
+
     this.data.getCustomers().subscribe((res: any[]) => {
       this.customers = res
     });
 
+  }
+
+  selectChangeCustomerGroupHandler(event: any) {
+    if (event.target.value == 'unselected') {
+      console.log('setting to null')
+      this.customersInGroup = null;
+      this.customerSelected = false;
+      this.selectedCustomer = null;
+    } else {
+      console.log(event.target.value + ' group selected')
+      this.data.getCustomersInGroup(event.target.value).subscribe((res: any[]) => {
+          this.customersInGroup = res
+        });
+    }
+    
   }
 
   selectChangeCustomerHandler(event: any) {

@@ -150,6 +150,10 @@ export class CustomerGroupComponent implements OnInit {
     }
   }
 
+  handleCancelAdd() {
+    this.addingCustomer = false;
+  }
+
   dismissCustomerSuccess() {
     console.log('dismissing success message')
     this.submitCustomerSuccess = false;

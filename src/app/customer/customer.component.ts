@@ -65,6 +65,10 @@ export class CustomerComponent implements OnInit {
     }
   }
 
+  handleCancelAdd() {
+    this.changingCustomerGroup = false;
+  }
+
   dismissCustGroupChangeSuccess() {
     this.submitCustGroupChangeSuccess = false;
     this.changingCustomerGroup = false;
